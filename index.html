@@ -60,6 +60,28 @@
     @media(max-width:360px){.path-card{height:270px}.path-card .desc{font-size:8px}.path-card h2{font-size:22px}.form-area{padding:32px 16px}.answer-group{grid-template-columns:1fr}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
     @media print{.topbar,.footer,.experience-side,.form-top,.form-actions,.summary-actions,.step-kicker,.notice{display:none!important}body{background:#fff}.experience{display:block}.form-area{min-height:auto;padding:0}#home{display:none!important}#experience{display:block!important}.summary-big{break-inside:avoid}}
+
+    /* CONTACT À LA FIN DU QUESTIONNAIRE — directement visible dans le parcours */
+    .end-contact{margin-top:34px;background:#fff;border:1px solid #dfe2e7;box-shadow:0 13px 40px rgba(15,24,52,.07);overflow:hidden;scroll-margin-top:30px}
+    .end-contact-head{padding:30px clamp(21px,3.7vw,40px);background:var(--ink);color:#fff;position:relative;overflow:hidden}
+    .end-contact-head:after{content:'AG';position:absolute;font-size:150px;font-weight:900;letter-spacing:-.13em;opacity:.06;right:5px;bottom:-48px;pointer-events:none}
+    .end-contact-tag{font-size:10px;letter-spacing:.21em;color:#e4bbca;font-weight:900;text-transform:uppercase}
+    .end-contact-head h3{position:relative;z-index:1;margin:15px 0 9px;font-size:clamp(30px,3.3vw,47px);line-height:1.03;letter-spacing:-.065em;font-weight:900}
+    .end-contact-head h3 em{font-family:Georgia,serif;font-weight:400;color:var(--pink)}
+    .end-contact-head p{position:relative;z-index:1;font-size:13px;color:#cad4e7;line-height:1.7;max-width:470px;margin:0}
+    .end-contact-body{padding:28px clamp(19px,3.7vw,40px) 31px}
+    .end-contact .contact-input{font-size:14px}
+    .end-contact .contact-field label{font-size:11px}
+    .end-contact-path{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid #e7e8ec;margin-bottom:21px;padding-bottom:17px}
+    .end-contact-path span{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#637188;font-weight:900}
+    .end-contact-path strong{background:#f4e2e8;color:#2a344b;padding:9px 13px;border-radius:2px;font-size:12px}
+    .end-contact-optin{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;color:#4a5970;margin:9px 0 22px;cursor:pointer}
+    .end-contact-optin input{margin-top:2px;accent-color:#284991;width:16px;height:16px;flex-shrink:0}
+    .end-contact .contact-help{background:#f9f6f3;margin-bottom:15px}
+    .end-contact .contact-buttons{margin-top:21px}
+    .end-contact .contact-buttons .btn{font-size:12px}
+    @media(max-width:680px){.end-contact{margin-top:28px}.end-contact-head{padding:27px 21px}.end-contact-body{padding:24px 20px 28px}.end-contact .contact-grid{grid-template-columns:1fr;gap:0}.end-contact .contact-buttons{flex-direction:column}.end-contact .contact-buttons .btn{width:100%}}
+    @media print{.end-contact{display:none!important}}
   </style>
 </head>
 <body>
@@ -229,6 +251,10 @@
       document.getElementById('downloadButton').addEventListener('click',downloadSummary);
       document.getElementById('restartButton').addEventListener('click',home);
       document.getElementById('editButton').addEventListener('click',()=>{state.step=1;render();});
+      const endForm=document.getElementById('endContactForm');
+      const endStatus=document.getElementById('endContactStatus');
+      endForm.addEventListener('submit',event=>{event.preventDefault();openContactMail(endForm,endStatus);});
+      document.getElementById('endContactCopy').addEventListener('click',()=>copyContactMail(endForm,endStatus));
     }
     window.scrollTo({top:0,behavior:'instant'});
   }
@@ -255,7 +281,30 @@
       <div class="summary-actions"><a class="btn" href="${escapeHTML(CONFIG.academicInfoUrl)}" target="_blank" rel="noopener noreferrer">Démarches officielles <span class="arrow" aria-hidden="true">↗</span></a>
       <a class="btn secondary" href="${escapeHTML(state.path==='CHASE'?CONFIG.sportInfoUrl:CONFIG.artisticInfoUrl)}" target="_blank" rel="noopener noreferrer">Comprendre le dispositif ↗</a></div>
       <div class="summary-actions"><button type="button" class="btn secondary" id="downloadButton">↓ Ma fiche (.txt)</button><button type="button" class="btn secondary" id="printButton">⎙ Imprimer / PDF</button><button type="button" class="btn ghost" id="editButton">Modifier ↗</button><button type="button" class="btn ghost" id="restartButton">Recommencer ↗</button></div>
-      <p class="notice">Une question sur ${escapeHTML(p.name)} ? <button type="button" class="link-button" data-contact>Contacter le lycée ↗</button></p>
+      <section class="end-contact" id="finalContact" aria-labelledby="finalContactTitle">
+        <div class="end-contact-head">
+          <span class="end-contact-tag">À LA FIN DE TON PARCOURS · CONTACT</span>
+          <h3 id="finalContactTitle">Une question ?<br><em>Échangeons.</em></h3>
+          <p>Tu as découvert ton parcours. Si toi ou ta famille souhaitez un renseignement, vous pouvez maintenant préparer un message au lycée.</p>
+        </div>
+        <div class="end-contact-body">
+          <div class="end-contact-path"><span>Ton parcours</span><strong>${escapeHTML(state.path)} · ${escapeHTML(p.label)}</strong></div>
+          <form id="endContactForm">
+            <input type="hidden" name="contactPath" value="${escapeHTML(state.path)} · ${escapeHTML(p.label==='SPORT'?'Sport':p.label==='MUSIQUE'?'Musique':'Danse')}">
+            <div class="contact-grid">
+              <div class="contact-field"><label for="endContactName">Votre nom *</label><input class="contact-input" id="endContactName" name="contactName" type="text" autocomplete="name" maxlength="90" required placeholder="Prénom et nom"></div>
+              <div class="contact-field"><label for="endContactEmail">Votre adresse e-mail *</label><input class="contact-input" id="endContactEmail" name="contactEmail" type="email" autocomplete="email" maxlength="150" required placeholder="nom@exemple.fr"></div>
+            </div>
+            <div class="contact-field"><label for="endContactAudience">Vous êtes *</label><select class="contact-input" id="endContactAudience" name="contactAudience" required><option value="">Sélectionner votre profil</option><option value="Parent / représentant légal">Parent / représentant légal</option><option value="Élève">Élève</option><option value="Autre">Autre</option></select></div>
+            <div class="contact-field"><label for="endContactMessage">Votre question *</label><textarea class="contact-input" id="endContactMessage" name="contactMessage" rows="5" maxlength="1500" required placeholder="Bonjour, je souhaite obtenir des renseignements sur…"></textarea></div>
+            <label class="end-contact-optin" for="endContactIncludeSummary"><input id="endContactIncludeSummary" type="checkbox" name="includeSummary" value="oui"><span>Ajouter à mon message le récapitulatif de mon parcours (classe, discipline, structure, rythme et projet). <strong>Facultatif.</strong></span></label>
+            <div class="contact-help">Merci de ne pas transmettre de données médicales, de pièce d'identité ni de document confidentiel. Ce contact est une demande de renseignements, <strong>pas une candidature officielle</strong>.</div>
+            <div class="contact-buttons"><button class="btn" type="submit">Préparer mon e-mail ↗</button><button class="btn secondary" id="endContactCopy" type="button">Copier le message</button></div>
+            <p class="contact-status" id="endContactStatus" role="status" aria-live="polite"></p>
+          </form>
+          <p class="contact-small">Destinataire : <strong>christophe.groux@ac-paris.fr</strong>. Votre messagerie s'ouvrira avec le message prérempli ; <strong>vous devrez ensuite cliquer sur « Envoyer »</strong>. Le site ne stocke pas les réponses.</p>
+        </div>
+      </section>
       <p class="notice">Information uniquement : ni préinscription, ni test d'éligibilité, ni promesse d'admission. Vérifier les modalités et dates de la campagne auprès de l'Académie.</p>`;
   }
   function downloadSummary(){
@@ -290,11 +339,47 @@
     contactStatus.textContent='';
     if(contactPriorFocus&&typeof contactPriorFocus.focus==='function'&&contactPriorFocus.isConnected)contactPriorFocus.focus();
   }
-  function contactDraft(){
-    if(!contactForm.reportValidity())return null;
-    const a={name:document.getElementById('contactName').value.trim(),email:document.getElementById('contactEmail').value.trim(),audience:document.getElementById('contactAudience').value,path:document.getElementById('contactPath').value,message:document.getElementById('contactMessage').value.trim()};
-    if(!a.name||!a.email||!a.audience||!a.path||!a.message){contactStatus.textContent='Merci de remplir les champs obligatoires.';return null;}
-    return {subject:'ABG | Demande de renseignements — '+a.path,body:'Bonjour,\n\n'+a.message+'\n\nCordialement,\n'+a.name+'\n\n---\nParcours : '+a.path+'\nProfil : '+a.audience+'\nAdresse de réponse : '+a.email+'\n\nDemande de renseignements — ne vaut pas candidature.'};
+  function contactDraft(form=contactForm,status=contactStatus){
+    if(!form.reportValidity())return null;
+    const data=new FormData(form);
+    const a={
+      name:String(data.get('contactName')||'').trim(),
+      email:String(data.get('contactEmail')||'').trim(),
+      audience:String(data.get('contactAudience')||''),
+      path:String(data.get('contactPath')||''),
+      message:String(data.get('contactMessage')||'').trim()
+    };
+    if(!a.name||!a.email||!a.audience||!a.path||!a.message){status.textContent='Merci de remplir les champs obligatoires.';return null;}
+    const context=(data.get('includeSummary')==='oui'&&state.path&&state.step===5)
+      ? '\n\n---\nRécapitulatif d’orientation volontairement joint :\n'+[
+          'Classe : '+state.answers.level,
+          'Discipline : '+state.answers.practice,
+          'Structure de pratique : '+state.answers.structure,
+          'Volume de pratique : '+state.answers.frequency,
+          'Projet : '+state.answers.goal
+        ].join('\n')
+      : '';
+    return {
+      subject:'ABG | Demande de renseignements — '+a.path,
+      body:'Bonjour,\n\n'+a.message+'\n\nCordialement,\n'+a.name+'\n\n---\nParcours : '+a.path+'\nProfil : '+a.audience+'\nAdresse de réponse : '+a.email+context+'\n\nDemande de renseignements — ne vaut pas candidature.'
+    };
+  }
+  function openContactMail(form,status){
+    const draft=contactDraft(form,status);if(!draft)return;
+    const url='mailto:'+CONFIG.schoolContactEmail+'?subject='+encodeURIComponent(draft.subject)+'&body='+encodeURIComponent(draft.body);
+    status.textContent='Votre messagerie va s’ouvrir. Vérifiez le destinataire et cliquez sur « Envoyer » : votre message n’est pas encore transmis.';
+    window.location.href=url;
+  }
+  async function copyContactMail(form,status){
+    const draft=contactDraft(form,status);if(!draft)return;
+    const content='À : '+CONFIG.schoolContactEmail+'\nObjet : '+draft.subject+'\n\n'+draft.body;
+    try{
+      if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(content);}
+      else{
+        const t=document.createElement('textarea');t.value=content;t.style.position='fixed';t.style.left='-9999px';document.body.append(t);t.select();if(!document.execCommand('copy'))throw Error('copy');t.remove();
+      }
+      status.textContent='Message copié. Vous pouvez le coller dans votre messagerie et l’envoyer au lycée.';
+    }catch(err){status.textContent='Copie indisponible sur ce navigateur. Utilisez « Préparer mon e-mail ».';}
   }
   document.addEventListener('click',event=>{
     if(event.target.closest('[data-contact]')){event.preventDefault();openContact();}
@@ -311,22 +396,9 @@
     }
   });
   contactForm.addEventListener('submit',event=>{
-    event.preventDefault();const draft=contactDraft();if(!draft)return;
-    const url='mailto:'+CONFIG.schoolContactEmail+'?subject='+encodeURIComponent(draft.subject)+'&body='+encodeURIComponent(draft.body);
-    contactStatus.textContent='Votre messagerie va s’ouvrir. Vérifiez le destinataire et cliquez sur « Envoyer » : le message n’est pas encore transmis.';
-    window.location.href=url;
+    event.preventDefault();openContactMail(contactForm,contactStatus);
   });
-  document.getElementById('contactCopy').addEventListener('click',async()=>{
-    const draft=contactDraft();if(!draft)return;
-    const content='À : '+CONFIG.schoolContactEmail+'\nObjet : '+draft.subject+'\n\n'+draft.body;
-    try{
-      if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(content);}
-      else{
-        const t=document.createElement('textarea');t.value=content;t.style.position='fixed';t.style.left='-9999px';document.body.append(t);t.select();if(!document.execCommand('copy'))throw Error('copy');t.remove();
-      }
-      contactStatus.textContent='Message copié. Vous pouvez le coller dans votre messagerie et l’envoyer au lycée.';
-    }catch(err){contactStatus.textContent='Copie indisponible sur ce navigateur. Utilisez « Ouvrir ma messagerie ».';}
-  });
+  document.getElementById('contactCopy').addEventListener('click',()=>copyContactMail(contactForm,contactStatus));
 
   const requested=(urlParams.get('parcours')||'').toUpperCase();if(PATHS[requested])selectPath(requested);
 </script>
