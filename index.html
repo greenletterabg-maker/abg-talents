@@ -740,6 +740,53 @@ body.send-page-open{overflow:hidden}
   .front-hero-gallery-wrap .front-hero-gallery{grid-template-rows:148px!important}
 }
 @media(max-width:350px){.front-hero-gallery-wrap .front-hero-gallery{grid-template-rows:132px!important}}
+
+
+/* Navigation utile, sans nouvelle page intermédiaire */
+.nav-paths-menu {position:relative; flex-shrink:0; font-size:11px; line-height:1.2;}
+.nav-paths-trigger {display:flex;align-items:center;gap:9px;list-style:none;white-space:nowrap;cursor:pointer;user-select:none;}
+.nav-paths-trigger::-webkit-details-marker {display:none;}
+.nav-chevron {width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .18s;}
+.nav-paths-menu[open] .nav-chevron {transform:rotate(225deg) translateY(-1px);}
+.nav-paths-menu[open] .nav-paths-trigger,.nav-paths-trigger:hover{color:#ba3b69;border-bottom-color:#ba3b69;}
+.nav-paths-options {position:absolute;top:calc(100% + 16px);right:-16px;z-index:110;width:274px;background:#fdfcf9;border:1px solid #dedee2;box-shadow:0 14px 42px rgba(15,28,55,.16);padding:9px;text-transform:none;letter-spacing:normal;}
+.nav-paths-options::before{content:"";position:absolute;width:12px;height:12px;right:24px;top:-7px;background:#fdfcf9;border-left:1px solid #dedee2;border-top:1px solid #dedee2;transform:rotate(45deg);}
+.nav-paths-options button{width:100%;min-height:54px;display:flex;justify-content:space-between;align-items:center;background:transparent;color:#172542;border:0;border-bottom:1px solid #e9e6e3;padding:12px;text-align:left;cursor:pointer;}
+.nav-paths-options button:last-child{border-bottom:0;}
+.nav-paths-options button:hover,.nav-paths-options button:focus-visible{background:#f2edf0;outline:none;}
+.nav-paths-options button span{font-size:10px;letter-spacing:.13em;font-weight:700;color:#6e778a;}
+.nav-paths-options button strong{font-size:18px;font-weight:850;letter-spacing:.015em;}
+.nav-paths-options button.menu-show-all {font-size:10px;letter-spacing:.015em;color:#b23e6a;min-height:43px;font-weight:750;}
+/* Retour accessible même lorsque le panneau latéral est en dehors de l'écran */
+.questionnaire-quicknav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:21px;}
+.questionnaire-quicknav button{border:0;background:transparent;color:#30415f;font-size:11px;letter-spacing:.035em;font-weight:750;padding:7px 0;cursor:pointer;text-decoration:underline;text-decoration-color:#d2c5cb;text-underline-offset:5px;}
+.questionnaire-quicknav button:hover,.questionnaire-quicknav button:focus-visible{color:#ac315e;text-decoration-color:currentColor;}
+.questionnaire-quicknav .prev-step{color:#56647b;}
+@media(max-width:810px){
+  .topbar{height:auto;min-height:74px;row-gap:12px;padding:13px 20px;flex-wrap:wrap;}
+  .topright{gap:15px;}
+  .topright #navReset{display:none!important;}
+  .nav-paths-options{right:0;}
+}
+@media(max-width:600px){
+  .topbar{padding:12px 15px 11px;min-height:0;gap:8px;}
+  .brand{width:100%;}
+  .topright{display:flex;width:100%;justify-content:space-between;gap:8px;align-items:center;min-width:0;}
+  .topright .link-button,.topright .nav-paths-trigger{font-size:10px;letter-spacing:.035em;padding:9px 0;white-space:nowrap;}
+  .topright .contact-trigger{padding:9px 10px;white-space:nowrap;}
+  .nav-paths-options{position:absolute;top:calc(100% + 9px);left:0;right:auto;width:min(280px,calc(100vw - 30px));box-shadow:0 10px 30px rgba(15,28,55,.21)}
+  .nav-paths-options::before{left:25px;right:auto;}
+  .nav-paths-options button{min-height:52px;}
+  .questionnaire-quicknav{margin-bottom:13px;flex-wrap:wrap;}
+}
+@media(max-width:350px){
+  .topbar{padding:12px 10px 10px;}
+  .topright{gap:5px;}
+  .topright .link-button,.topright .nav-paths-trigger{font-size:9px;letter-spacing:0;}
+  .topright .contact-trigger{padding:8px 7px;}
+  .nav-paths-options{width:calc(100vw - 20px);}
+}
+
 </style>
 </head>
 <body>
@@ -752,6 +799,15 @@ body.send-page-open{overflow:hidden}
 </div>
 <div class="topright">
 <button class="link-button" id="navReset" type="button">Accueil</button>
+      <details class="nav-paths-menu" id="pathsMenu">
+        <summary class="link-button nav-paths-trigger">Les parcours <span class="nav-chevron" aria-hidden="true"></span></summary>
+        <div class="nav-paths-options" aria-label="Choisir un parcours">
+          <button type="button" data-path="CHASE"><span>SPORT</span><strong>CHASE</strong></button>
+          <button type="button" data-path="CHAM"><span>MUSIQUE</span><strong>CHAM</strong></button>
+          <button type="button" data-path="CHAD"><span>DANSE</span><strong>CHAD</strong></button>
+          <button type="button" class="menu-show-all" id="navAllPaths">Voir les trois univers sur l’accueil</button>
+        </div>
+      </details>
 <button class="link-button" data-agenda="" type="button">Dates académiques</button>
 <a class="link-button contact-trigger" data-contact="" href="#contactLayer">Nous contacter</a>
 </div>
@@ -891,7 +947,7 @@ body.send-page-open{overflow:hidden}
 <small>L'UF3S est facultative. L'entrée en CS E2S–MAPS suppose de remplir les conditions de candidature et d'admission ; elle n'est pas automatique.</small>
 </div>
 </div>
-<div class="side-bottom"><button class="switch-path" id="switchPath" type="button">Changer de parcours</button><span>Information uniquement · Ne vaut pas inscription</span></div>
+<div class="side-bottom"><button class="switch-path" id="switchPath" type="button">← Retour aux parcours</button><span>Information uniquement · Ne vaut pas inscription</span></div>
 <svg aria-hidden="true" class="side-decoration" viewbox="0 0 260 260"><circle cx="130" cy="130" fill="none" r="70" stroke="white" stroke-width="18"></circle><circle cx="130" cy="130" fill="none" r="115" stroke="white" stroke-width="1"></circle><circle cx="215" cy="60" fill="white" r="15"></circle></svg>
 </aside>
 <section aria-atomic="true" aria-live="polite" class="form-area fade" id="formArea"></section>
@@ -981,11 +1037,25 @@ body.send-page-open{overflow:hidden}
   const formArea=document.getElementById('formArea');
   const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const urlParams=new URLSearchParams(window.location.search);
-  function selectPath(path){
+  // Navigation locale : enregistre la vue pour permettre le retour du navigateur.
+  const pageUrl=(hash='')=>location.pathname+location.search+hash;
+  function rememberRoute(page,replace=false){
+    const route={abgPage:page};
+    let hash='';
+    if(page==='questionnaire'){
+      route.path=state.path;route.step=state.step;route.answers={...state.answers};
+      hash='#questionnaire-'+state.path.toLowerCase()+'-'+state.step;
+    }else if(page==='agenda')hash='#agenda';
+    else if(page==='parcours')hash='#parcours';
+    const current=history.state;
+    if(current?.abgPage===route.abgPage && current?.path===route.path && current?.step===route.step)replace=true;
+    try{history[replace?'replaceState':'pushState'](route,'',pageUrl(hash));}catch(e){}
+  }
+  function selectPath(path,skipHistory=false){
     if(!PATHS[path])return;
     state.path=path;state.step=1;state.answers={level:'',practice:'',structure:'',frequency:'',goal:''};
     setView(true);render();
-    try{history.replaceState(null,'',location.pathname+location.search+'#questionnaire-'+path.toLowerCase());}catch(e){}
+    if(!skipHistory)rememberRoute('questionnaire');
   }
   function setView(inExperience){
     app.classList.toggle('experience-active',inExperience);
@@ -993,16 +1063,21 @@ body.send-page-open{overflow:hidden}
     document.getElementById('agendaView').hidden=true;
     window.scrollTo({top:0,behavior:'instant'});
   }
-  function showParcours(){
-    // One click = one path: the homepage visuals are the actual selectors.
-    home();
+  function showParcours(skipHistory=false){
+    // Retour vers les trois visuels cliquables, sans page intermédiaire.
+    home(true);
+    if(!skipHistory)rememberRoute('parcours');
     const card=document.querySelector('.front-gallery-chase');
     if(card){
       card.focus({preventScroll:true});
       if(window.innerWidth<=760){card.scrollIntoView({behavior:'smooth',block:'center'});}
     }
   }
-  function home(){state.step=0;state.path=null;setView(false);try{history.replaceState(null,'',location.pathname);}catch(error){if(location.hash)location.hash='';}}
+  function home(skipHistory=false){
+    state.step=0;state.path=null;setView(false);
+    document.getElementById('pathsMenu')?.removeAttribute('open');
+    if(!skipHistory)rememberRoute('home');
+  }
   // CALENDRIER 2027 — renseigner les dates seulement après publication par l'Académie.
   // Format pour une date connue : date:'2027-04-28' (à titre d'exemple de syntaxe, PAS une date annoncée).
   const ACADEMIC_MILESTONES=[
@@ -1029,7 +1104,7 @@ body.send-page-open{overflow:hidden}
     document.getElementById('agendaView').hidden=false;
     renderAgenda();
     window.scrollTo({top:0,behavior:'instant'});
-    try{history.replaceState(null,'','#agenda');}catch(error){}
+    rememberRoute('agenda');
     document.getElementById('agendaHeading').focus({preventScroll:true});
   }
   function openMiniStageInquiry(){
@@ -1071,18 +1146,21 @@ body.send-page-open{overflow:hidden}
     }else if(n===5){
       html=summaryHTML();
     }
-    formArea.innerHTML=html;formArea.classList.remove('fade');void formArea.offsetWidth;formArea.classList.add('fade');
+    const navBack=`<div class="questionnaire-quicknav"><button type="button" id="quickBackParcours">← Retour aux parcours</button>${n>1?'<button class="prev-step" type="button" id="quickBackStep">← Étape précédente</button>':''}</div>`;
+    formArea.innerHTML=navBack+html;formArea.classList.remove('fade');void formArea.offsetWidth;formArea.classList.add('fade');
+    document.getElementById('quickBackParcours').addEventListener('click',()=>showParcours());
+    document.getElementById('quickBackStep')?.addEventListener('click',back);
     if(n<=4){
       const form=document.getElementById('stepForm');
-      form.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{state.answers[input.name]=input.value;const group=input.closest('.answer-group');if(group)group.querySelectorAll('.answer-option').forEach(label=>label.classList.toggle('selected',label.contains(input)&&input.checked));updateButton();}));
+      form.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{state.answers[input.name]=input.value;const group=input.closest('.answer-group');if(group)group.querySelectorAll('.answer-option').forEach(label=>label.classList.toggle('selected',label.contains(input)&&input.checked));updateButton();rememberRoute('questionnaire',true);}));
       form.addEventListener('submit',e=>{e.preventDefault();if(canContinue())next();});
       document.getElementById('backButton').addEventListener('click',back);
       updateButton();
     }else{
       document.getElementById('printButton').addEventListener('click',()=>window.print());
       document.getElementById('downloadButton').addEventListener('click',downloadSummary);
-      document.getElementById('restartButton').addEventListener('click',home);
-      document.getElementById('editButton').addEventListener('click',()=>{state.step=1;render();});
+      document.getElementById('restartButton').addEventListener('click',()=>home());
+      document.getElementById('editButton').addEventListener('click',()=>{state.step=1;render();rememberRoute('questionnaire');});
       const endForm=document.getElementById('endContactForm');
       const endStatus=document.getElementById('endContactStatus');
       endForm.addEventListener('submit',event=>{event.preventDefault();sendContactRequest(endForm,endStatus);});
@@ -1092,8 +1170,11 @@ body.send-page-open{overflow:hidden}
   }
   function canContinue(){const a=state.answers;return state.step===1?!!a.level:state.step===2?!!a.practice:state.step===3?!!a.structure:state.step===4?!!(a.frequency&&a.goal):false;}
   function updateButton(){const b=document.getElementById('nextButton');if(b)b.disabled=!canContinue();}
-  function next(){state.step=Math.min(5,state.step+1);render();}
-  function back(){if(state.step<=1){showParcours();return;}state.step-=1;render();}
+  function next(){state.step=Math.min(5,state.step+1);render();rememberRoute('questionnaire');}
+  function back(){
+    if(state.step<=1){showParcours();return;}
+    state.step-=1;render();rememberRoute('questionnaire',true);
+  }
   function summaryHTML(){
     const p=PATHS[state.path];const a=state.answers;
     const mainSteps=[
@@ -1158,10 +1239,11 @@ body.send-page-open{overflow:hidden}
   document.addEventListener('keydown',event=>{
     if(event.key==='Escape')document.getElementById('pathsMenu')?.removeAttribute('open');
   });
-  document.getElementById('switchPath').addEventListener('click',showParcours);
+  document.getElementById('switchPath').addEventListener('click',()=>showParcours());
+  document.getElementById('navAllPaths').addEventListener('click',()=>{document.getElementById('pathsMenu').open=false;showParcours();});
   document.querySelectorAll('[data-agenda]').forEach(b=>b.addEventListener('click',event=>{event.preventDefault();showAgenda();}));
-  document.getElementById('agendaBack').addEventListener('click',home);
-  document.getElementById('agendaExplore').addEventListener('click',showParcours);
+  document.getElementById('agendaBack').addEventListener('click',()=>home());
+  document.getElementById('agendaExplore').addEventListener('click',()=>showParcours());
   document.querySelectorAll('[data-agenda-path]').forEach(b=>b.addEventListener('click',()=>{agendaPath=b.dataset.agendaPath;renderAgenda();}));
   document.getElementById('miniStageInterest').addEventListener('click',event=>{event.preventDefault();openMiniStageInquiry();});
   document.querySelectorAll('[data-mini-stage]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();agendaPath='TOUS';openMiniStageInquiry();}));
@@ -1170,8 +1252,24 @@ body.send-page-open{overflow:hidden}
   else if(window.location.hash==='#agenda') setTimeout(showAgenda,0);
   // A direct link to the form works without first visiting the homepage.
   else if(window.location.hash==='#contactLayer') setTimeout(openContact,0);
-  else if(/^#questionnaire-(chase|cham|chad)$/i.test(window.location.hash)){const path=window.location.hash.split('-')[1].toUpperCase();setTimeout(()=>selectPath(path),0);}
-  document.getElementById('navReset').addEventListener('click',home);
+  else if(/^#questionnaire-(chase|cham|chad)(?:-[1-5])?$/i.test(window.location.hash)){
+    const match=window.location.hash.match(/^#questionnaire-(chase|cham|chad)(?:-([1-5]))?$/i);
+    setTimeout(()=>{selectPath(match[1].toUpperCase(),true);state.step=Number(match[2]||1);render();rememberRoute('questionnaire',true);},0);
+  }
+  window.addEventListener('popstate',event=>{
+    if(document.getElementById('contactLayer').classList.contains('is-visible'))closeContact();
+    const route=event.state;
+    if(route?.abgPage==='questionnaire' && PATHS[route.path]){
+      state.path=route.path;state.step=Math.min(5,Math.max(1,Number(route.step)||1));
+      state.answers={level:'',practice:'',structure:'',frequency:'',goal:'',...route.answers};
+      setView(true);render();
+    }else if(route?.abgPage==='agenda'){
+      app.classList.remove('experience-active','parcours-active');app.classList.add('agenda-active');
+      document.getElementById('agendaView').hidden=false;renderAgenda();window.scrollTo({top:0,behavior:'instant'});
+    }else if(route?.abgPage==='parcours')showParcours(true);
+    else home(true);
+  });
+  document.getElementById('navReset').addEventListener('click',()=>home());
   document.getElementById('brandHome').addEventListener('click',e=>{e.preventDefault();home();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.step>0&&state.step<5)back();});
 
@@ -1192,7 +1290,7 @@ body.send-page-open{overflow:hidden}
     contactLayer.classList.add('is-visible');
     document.body.classList.add('contact-is-open');
     contactLayer.setAttribute('aria-hidden','false');
-    try{history.replaceState(null,'',location.pathname+location.search+'#contactLayer');}catch(err){/* Le formulaire reste ouvert sans modification d'adresse. */}
+    try{history.replaceState(history.state,'',location.pathname+location.search+'#contactLayer');}catch(err){/* Le formulaire reste ouvert sans modification d'adresse. */}
     document.getElementById('contactName').focus({preventScroll:true});
   }
   function closeContact(){
@@ -1202,7 +1300,7 @@ body.send-page-open{overflow:hidden}
     contactStatus.textContent='';
     if(location.hash==='#contactLayer'){
       const previous=contactPreviousHash||(app.classList.contains('agenda-active')?'#agenda':app.classList.contains('parcours-active')?'#parcours':'');
-      try{history.replaceState(null,'',location.pathname+location.search+previous);}catch(err){location.hash=previous||'#home';}
+      try{history.replaceState(history.state,'',location.pathname+location.search+previous);}catch(err){location.hash=previous||'#home';}
     }
     if(contactPriorFocus&&typeof contactPriorFocus.focus==='function'&&contactPriorFocus.isConnected)contactPriorFocus.focus();
   }
