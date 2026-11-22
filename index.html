@@ -528,6 +528,43 @@ a.front-solid-btn{color:#fff}
 }
 @media(max-width:420px){.front-hero-gallery{grid-template-rows:148px;}}
 @media(max-width:350px){.front-hero-gallery{grid-template-rows:132px;}}
+</style><style>
+
+/* ABG TALENTS — écran de confirmation fiable de la demande. */
+.send-page[hidden]{display:none!important}
+.send-page{position:fixed;inset:0;z-index:5000;min-height:100vh;min-height:100dvh;background:#f7f6f2;overflow-y:auto;color:#17233f}
+body.send-page-open{overflow:hidden}
+.send-page-top{display:flex;align-items:center;justify-content:space-between;padding:23px clamp(24px,4.5vw,75px);background:#fff;border-bottom:1px solid #e7e6e5;gap:20px}
+.send-page-brand{display:flex;align-items:center;gap:13px;font-size:13px;font-weight:900;line-height:1.3;letter-spacing:.01em}
+.send-page-brand img{width:38px;height:38px;object-fit:contain}
+.send-page-brand small{display:block;font-size:9px;letter-spacing:.14em;font-weight:800;margin-top:4px;color:#64728c}
+.send-page-close{border:1px solid #d6d8df;background:white;color:#17233f;border-radius:2px;padding:12px 17px;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.send-page-close:hover{background:#f2f3f6}
+.send-page-grid{min-height:calc(100dvh - 86px);display:grid;grid-template-columns:43% 57%}
+.send-page-intro{background:#182643;color:#fff;padding:clamp(34px,6vw,90px) clamp(26px,5vw,85px);display:flex;flex-direction:column;justify-content:space-between;gap:36px}
+.send-page-eyebrow{color:#f19ab6;letter-spacing:.21em;text-transform:uppercase;font-size:11px;font-weight:800}
+.send-page-art{font-size:clamp(76px,12vw,180px);font-weight:900;letter-spacing:-.1em;line-height:.85;color:#ffffff15;user-select:none}
+.send-page-intro-bottom{color:#cdd6e6;font-size:11px;line-height:1.8;letter-spacing:.02em}
+.send-page-content{align-self:center;padding:clamp(35px,6vw,90px) clamp(30px,7vw,110px);max-width:900px;width:100%}
+.send-page-chip{display:inline-flex;align-items:center;gap:10px;color:#596a87;letter-spacing:.14em;font-size:11px;font-weight:850;text-transform:uppercase}
+.send-page-chip:before{content:'';width:9px;height:9px;border-radius:50%;background:#ef7899}
+.send-page-icon{width:80px;height:80px;border:2px solid #17233f;display:grid;place-items:center;font-size:43px;border-radius:50%;font-weight:600;margin:34px 0 26px}
+.send-page[data-state="sending"] .send-page-icon{font-size:0;border-color:#bbc4d2;border-top-color:#df5e87;animation:abg-send-spin 1s linear infinite}
+@keyframes abg-send-spin{to{transform:rotate(360deg)}}
+.send-page-title{font-size:clamp(34px,4.4vw,70px);letter-spacing:-.065em;line-height:1.03;margin:0 0 22px;font-weight:900;max-width:700px}
+.send-page-description{font-size:clamp(16px,1.5vw,20px);line-height:1.6;color:#59657d;max-width:620px;margin:0 0 35px}
+.send-page-actions{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 42px}
+.send-page-actions button{padding:16px 22px;font-size:12px;font-weight:800;border:1px solid #17233f;border-radius:2px;letter-spacing:.02em;min-height:53px}
+.send-page-primary{background:#17233f;color:white}
+.send-page-secondary{background:transparent;color:#17233f}
+.send-page-actions button:hover{filter:brightness(.95)}
+.send-page-note{font-size:12px;line-height:1.7;color:#67748b;border-top:1px solid #dce0e6;padding-top:17px;max-width:630px}
+.send-page[data-state="success"] .send-page-icon{color:#2a6a58;border-color:#2a6a58}
+.send-page[data-state="error"] .send-page-icon{color:#bc4165;border-color:#bc4165}
+.send-page-actions button[hidden],.send-page-close[hidden]{display:none!important}
+@media(max-width:800px){.send-page-grid{display:block}.send-page-intro{min-height:158px;padding:28px 25px;gap:15px}.send-page-art{display:none}.send-page-intro-bottom{font-size:10px}.send-page-content{padding:40px 25px 60px}.send-page-top{padding:14px 21px}.send-page-brand{font-size:11px}.send-page-brand img{width:30px;height:30px}.send-page-close{font-size:9px;padding:9px}.send-page-icon{margin:22px 0 21px;width:65px;height:65px;font-size:34px}.send-page-actions{flex-direction:column}.send-page-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.send-page[data-state="sending"] .send-page-icon{animation:none}}
+
 </style></head>
 <body>
 <div class="shell" id="app">
@@ -644,7 +681,7 @@ a.front-solid-btn{color:#fff}
 <div class="contact-content-top"><span class="eyebrow">VOTRE MESSAGE / 01</span><button aria-label="Fermer le formulaire" class="contact-close" data-contact-close="" type="button">×</button></div>
 <h3>Contacter le lycée</h3>
 <p class="contact-caption" id="contactDescription">Un renseignement sur les parcours à horaires aménagés ? Écrivez-nous en quelques lignes.</p>
-<form id="contactForm">
+<form id="contactForm" novalidate>
 <div class="contact-grid">
 <div class="contact-field"><label for="contactName">Votre nom *</label><input autocomplete="name" class="contact-input" id="contactName" maxlength="90" name="contactName" placeholder="Prénom et nom" required="" type="text"/></div>
 <div class="contact-field"><label for="contactEmail">Votre e-mail *</label><input autocomplete="email" class="contact-input" id="contactEmail" maxlength="150" name="contactEmail" placeholder="nom@exemple.fr" required="" type="email"/></div>
@@ -663,6 +700,29 @@ a.front-solid-btn{color:#fff}
 </section>
 </div>
 </div>
+<!-- L'écran n'indique "envoyé" qu'après accusé explicite de Google Apps Script. -->
+<section id="sendPage" class="send-page" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="sendPageTitle" data-state="sending">
+  <header class="send-page-top">
+    <div class="send-page-brand"><img id="sendPageLogo" alt=""/><span>ABBÉ GRÉGOIRE<small>LYCÉE PROFESSIONNEL · PARIS</small></span></div>
+    <button type="button" class="send-page-close" id="sendPageClose" hidden>Retour au formulaire</button>
+  </header>
+  <div class="send-page-grid">
+    <aside class="send-page-intro"><div class="send-page-eyebrow">ABG TALENTS / CONTACT</div><div class="send-page-art" aria-hidden="true">AG.</div><div class="send-page-intro-bottom">SPORT · MUSIQUE · DANSE<br>UN TALENT. DEUX AMBITIONS.</div></aside>
+    <main class="send-page-content">
+      <div class="send-page-chip" id="sendPageKicker">Transmission de votre demande</div>
+      <div class="send-page-icon" id="sendPageIcon" aria-hidden="true">⋯</div>
+      <h1 class="send-page-title" id="sendPageTitle" tabindex="-1">Envoi en cours.</h1>
+      <p class="send-page-description" id="sendPageDescription">Votre demande est en cours de transmission au lycée.</p>
+      <div class="send-page-actions">
+        <button type="button" class="send-page-primary" id="sendPageHome" hidden>Revenir à l'accueil</button>
+        <button type="button" class="send-page-secondary" id="sendPageRetry" hidden>Retourner au formulaire</button>
+        <button type="button" class="send-page-secondary" id="sendPageCopy" hidden>Copier ma demande</button>
+      </div>
+      <div class="send-page-note" id="sendPageNote">Cette démarche est une demande de renseignements : elle ne vaut ni inscription, ni candidature officielle.</div>
+    </main>
+  </div>
+</section>
+
 <script>
   // Réutilise l'image du logo déjà intégrée au fichier, sans image externe à télécharger.
   document.documentElement.style.setProperty('--school-logo-image', `url("${document.querySelector('.brand-logo-officiel').src}")`);
@@ -828,7 +888,7 @@ a.front-solid-btn{color:#fff}
         </div>
         <div class="end-contact-body">
           <div class="end-contact-path"><span>Ton parcours</span><strong>${escapeHTML(state.path)} · ${escapeHTML(p.label)}</strong></div>
-          <form id="endContactForm">
+          <form id="endContactForm" novalidate>
             <input type="hidden" name="contactPath" value="${escapeHTML(state.path)} · ${escapeHTML(p.label==='SPORT'?'Sport':p.label==='MUSIQUE'?'Musique':'Danse')}">
             <div class="contact-grid">
               <div class="contact-field"><label for="endContactName">Votre nom *</label><input class="contact-input" id="endContactName" name="contactName" type="text" autocomplete="name" maxlength="90" required placeholder="Prénom et nom"></div>
@@ -903,7 +963,12 @@ a.front-solid-btn{color:#fff}
     if(contactPriorFocus&&typeof contactPriorFocus.focus==='function'&&contactPriorFocus.isConnected)contactPriorFocus.focus();
   }
   function contactDraft(form=contactForm,status=contactStatus){
-    if(!form.reportValidity())return null;
+    if(!form.checkValidity()){
+      status.textContent='Merci de compléter les champs obligatoires avant l’envoi.';
+      const invalid=form.querySelector(':invalid');
+      if(invalid){invalid.focus({preventScroll:false});try{invalid.reportValidity();}catch(e){}}
+      return null;
+    }
     const data=new FormData(form);
     const a={
       name:String(data.get('contactName')||'').trim(),
@@ -977,6 +1042,70 @@ a.front-solid-btn{color:#fff}
       try{outgoing.submit();}catch(err){finish(err);}
     });
   }
+  // Écran visible pendant la transmission, confirmé uniquement à réception du reçu serveur.
+  const sendPage=document.getElementById('sendPage');
+  const sendPageTitle=document.getElementById('sendPageTitle');
+  const sendPageIcon=document.getElementById('sendPageIcon');
+  const sendPageKicker=document.getElementById('sendPageKicker');
+  const sendPageDescription=document.getElementById('sendPageDescription');
+  const sendPageHome=document.getElementById('sendPageHome');
+  const sendPageRetry=document.getElementById('sendPageRetry');
+  const sendPageCopy=document.getElementById('sendPageCopy');
+  const sendPageClose=document.getElementById('sendPageClose');
+  let sentFormRef=null;
+  let sentFormStatus=null;
+  const logoForResult=document.querySelector('.brand-logo-officiel');
+  if(logoForResult)document.getElementById('sendPageLogo').src=logoForResult.src;
+  function setSendPage(stage){
+    const views={
+      sending:{kicker:'Transmission en cours',symbol:'⋯',title:'Nous transmettons votre demande.',description:'La demande est en cours de transmission. Un accusé du service est nécessaire pour confirmer l’envoi.'},
+      success:{kicker:'Demande transmise',symbol:'✓',title:'Votre demande a bien été envoyée.',description:'Le service a confirmé la transmission de votre message au lycée professionnel Abbé Grégoire. L’établissement pourra vous répondre à l’adresse indiquée.'},
+      error:{kicker:'Envoi non confirmé',symbol:'!',title:'Nous ne pouvons pas confirmer l’envoi.',description:'Le service n’a pas confirmé la transmission. Le message a éventuellement pu partir : pour éviter un doublon, vérifiez sa réception auprès du lycée avant une nouvelle tentative.'}
+    };
+    const v=views[stage];
+    sendPage.dataset.state=stage;
+    sendPage.hidden=false;
+    sendPage.setAttribute('aria-hidden','false');
+    document.body.classList.add('send-page-open');
+    sendPageKicker.textContent=v.kicker;
+    sendPageIcon.textContent=v.symbol;
+    sendPageTitle.textContent=v.title;
+    sendPageDescription.textContent=v.description;
+    sendPageHome.hidden=stage!=='success';
+    sendPageRetry.hidden=stage!=='error';
+    sendPageCopy.hidden=stage!=='error';
+    sendPageClose.hidden=stage==='sending';
+    sendPageClose.textContent=stage==='success'?'Fermer':'Retour au formulaire';
+    sendPage.scrollTop=0;
+    sendPageTitle.focus({preventScroll:true});
+  }
+  function dismissSendPage(goToHome){
+    if(sendPage.dataset.state==='sending')return;
+    sendPage.hidden=true;
+    sendPage.setAttribute('aria-hidden','true');
+    document.body.classList.remove('send-page-open');
+    if(goToHome){
+      if(contactLayer.classList.contains('is-visible'))closeContact();
+      home();
+    }else if(sentFormRef){
+      const next=sentFormRef.querySelector('button[type="submit"]');
+      if(next)next.focus({preventScroll:true});
+    }
+  }
+  sendPageHome.addEventListener('click',()=>dismissSendPage(true));
+  sendPageRetry.addEventListener('click',()=>dismissSendPage(false));
+  sendPageClose.addEventListener('click',()=>dismissSendPage(sendPage.dataset.state==='success'));
+  sendPageCopy.addEventListener('click',async()=>{
+    if(!sentFormRef||!sentFormStatus)return;
+    await copyContactMail(sentFormRef,sentFormStatus);
+    if(sentFormStatus.textContent.startsWith('Message copié')){
+      sendPageCopy.textContent='Demande copiée';
+      sendPageDescription.textContent='La demande a été copiée. Vous pouvez la coller dans votre messagerie et l’envoyer au lycée : ce n’est pas un envoi automatique.';
+    }
+  });
+  sendPage.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&sendPage.dataset.state!=='sending'){e.preventDefault();dismissSendPage(sendPage.dataset.state==='success');}
+  });
   async function sendContactRequest(form,status){
     const draft=contactDraft(form,status);
     if(!draft)return;
@@ -1003,12 +1132,18 @@ a.front-solid-btn{color:#fff}
     };
     if(submit){submit.disabled=true;submit.textContent='Envoi en cours…';}
     status.textContent='Transmission de votre demande…';
+    sentFormRef=form;
+    sentFormStatus=status;
+    sendPageCopy.textContent='Copier ma demande';
+    setSendPage('sending');
     try{
       await transmitToSchool(payload);
-      status.textContent='Votre demande a bien été transmise au lycée. Ce formulaire ne vaut pas inscription.';
+      status.textContent='Demande transmise au lycée (accusé reçu). Ceci ne vaut pas inscription.';
       form.reset();
+      setSendPage('success');
     }catch(err){
-      status.textContent='Envoi non confirmé. Votre message peut avoir été transmis ; pour éviter un doublon, vérifiez auprès du lycée avant de réessayer. « Copier le message » reste disponible.';
+      status.textContent='Envoi non confirmé. Vérifiez auprès du lycée avant de réessayer, afin d’éviter un doublon.';
+      setSendPage('error');
     }finally{
       if(submit){submit.disabled=false;submit.innerHTML=originalLabel;}
     }
