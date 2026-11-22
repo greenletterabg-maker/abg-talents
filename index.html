@@ -992,55 +992,13 @@ body.send-page-open{overflow:hidden}
       body:'Bonjour,\n\n'+a.message+'\n\nCordialement,\n'+a.name+'\n\n---\nParcours : '+a.path+'\nProfil : '+a.audience+'\nAdresse de réponse : '+a.email+context+'\n\nDemande de renseignements — ne vaut pas candidature.'
     };
   }
-  // Appel inter-domaines : envoi par formulaire HTML à un iframe invisible.
-  // L'application Apps Script renvoie un accusé technique via postMessage ;
-  // on ne signale jamais un succès avant d'avoir reçu cet accusé.
+  // L'URL Apps Script doit etre une application web deployee (/exec).
   function backendReady(){
     return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(CONFIG.appsScriptUrl);
   }
-  function formReceiptOrigin(origin){
-    return /^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com|[a-z0-9-]+-script\.googleusercontent\.com)$/i.test(origin);
-  }
   function requestId(){
-    if(window.crypto&&typeof crypto.randomUUID==='function') return crypto.randomUUID();
+    if(window.crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID();
     return String(Date.now())+'-'+Math.random().toString(36).slice(2);
-  }
-  function transmitToSchool(payload){
-    return new Promise((resolve,reject)=>{
-      const token=requestId();
-      const frame=document.createElement('iframe');
-      frame.name='abg_mail_'+token.replace(/[^a-zA-Z0-9]/g,'');
-      frame.title='Transmission du message';
-      frame.style.cssText='position:absolute;width:1px;height:1px;left:-9999px;border:0';
-      const outgoing=document.createElement('form');
-      outgoing.action=CONFIG.appsScriptUrl;
-      outgoing.method='POST';
-      outgoing.target=frame.name;
-      outgoing.acceptCharset='UTF-8';
-      outgoing.style.display='none';
-      for(const [name,value] of Object.entries({...payload,nonce:token,website:''})){
-        const input=document.createElement('input');input.type='hidden';input.name=name;input.value=String(value??'');outgoing.appendChild(input);
-      }
-      let done=false;
-      let timer;
-      function finish(error){
-        if(done)return;done=true;clearTimeout(timer);
-        window.removeEventListener('message',onMessage);
-        outgoing.remove();
-        frame.remove();
-        if(error)reject(error);else resolve();
-      }
-      function onMessage(event){
-        if(!formReceiptOrigin(event.origin))return;
-        const m=event.data;
-        if(!m||m.type!=='ABG_MAIL_RESULT'||m.nonce!==token)return;
-        finish(m.ok===true?null:new Error('Le service a refusé l’envoi.'));
-      }
-      window.addEventListener('message',onMessage);
-      timer=setTimeout(()=>finish(new Error('Aucune confirmation reçue du service.')),30000);
-      document.body.append(frame,outgoing);
-      try{outgoing.submit();}catch(err){finish(err);}
-    });
   }
   // Écran visible pendant la transmission, confirmé uniquement à réception du reçu serveur.
   const sendPage=document.getElementById('sendPage');
@@ -1060,7 +1018,8 @@ body.send-page-open{overflow:hidden}
     const views={
       sending:{kicker:'Transmission en cours',symbol:'⋯',title:'Nous transmettons votre demande.',description:'La demande est en cours de transmission. Un accusé du service est nécessaire pour confirmer l’envoi.'},
       success:{kicker:'Demande transmise',symbol:'✓',title:'Votre demande a bien été envoyée.',description:'Le service a confirmé la transmission de votre message au lycée professionnel Abbé Grégoire. L’établissement pourra vous répondre à l’adresse indiquée.'},
-      error:{kicker:'Envoi non confirmé',symbol:'!',title:'Nous ne pouvons pas confirmer l’envoi.',description:'Le service n’a pas confirmé la transmission. Le message a éventuellement pu partir : pour éviter un doublon, vérifiez sa réception auprès du lycée avant une nouvelle tentative.'}
+      error:{kicker:'Envoi non confirmé',symbol:'!',title:'Nous ne pouvons pas confirmer l’envoi.',description:'Le service n’a pas confirmé la transmission. Vérifiez auprès du lycée avant de renouveler la demande.'},
+      incomplete:{kicker:'Formulaire à compléter',symbol:'!',title:'Il manque une information.',description:'Complétez les champs obligatoires indiqués dans le formulaire avant d’envoyer votre demande.'}
     };
     const v=views[stage];
     sendPage.dataset.state=stage;
@@ -1072,7 +1031,7 @@ body.send-page-open{overflow:hidden}
     sendPageTitle.textContent=v.title;
     sendPageDescription.textContent=v.description;
     sendPageHome.hidden=stage!=='success';
-    sendPageRetry.hidden=stage!=='error';
+    sendPageRetry.hidden=stage!=='error'&&stage!=='incomplete';
     sendPageCopy.hidden=stage!=='error';
     sendPageClose.hidden=stage==='sending';
     sendPageClose.textContent=stage==='success'?'Fermer':'Retour au formulaire';
@@ -1106,16 +1065,26 @@ body.send-page-open{overflow:hidden}
   sendPage.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&sendPage.dataset.state!=='sending'){e.preventDefault();dismissSendPage(sendPage.dataset.state==='success');}
   });
-  async function sendContactRequest(form,status){
+  // Envoi fiable : formulaire POST classique, navigation vers la page de resultat
+  // servie par Apps Script. Aucun iframe invisible ni fetch cross-origin.
+  function sendContactRequest(form,status){
     const draft=contactDraft(form,status);
-    if(!draft)return;
+    if(!draft){
+      sentFormRef=form;sentFormStatus=status;
+      setSendPage('incomplete');
+      const missing=form.querySelector(':invalid');
+      const fieldName=missing?.closest('.contact-field')?.querySelector('label')?.textContent?.trim().replace(/\s*\*$/, '');
+      if(fieldName)sendPageDescription.textContent='Complétez le champ « '+fieldName+' » dans le formulaire, puis recommencez.';
+      return;
+    }
     if(!backendReady()){
-      status.textContent='L’envoi automatique n’est pas encore configuré. Utilisez « Copier le message » ou contactez le lycée directement par e-mail.';
+      sentFormRef=form;sentFormStatus=status;
+      setSendPage('error');
+      sendPageDescription.textContent='Le service de transmission n’est pas configuré. Vous pouvez copier votre message et contacter le lycée par e-mail.';
+      status.textContent='Service de transmission indisponible.';
       return;
     }
     const data=new FormData(form);
-    const submit=form.querySelector('button[type="submit"]');
-    const originalLabel=submit?submit.innerHTML:'';
     const hasSummary=Boolean(state.path&&state.step===5&&form.id==='endContactForm');
     const payload={
       sujet:draft.subject,
@@ -1128,24 +1097,32 @@ body.send-page-open{overflow:hidden}
       discipline:hasSummary?(state.answers.practice||''):'',
       structure:hasSummary?(state.answers.structure||''):'',
       volume:hasSummary?(state.answers.frequency||''):'',
-      projet:hasSummary?(state.answers.goal||''):''
+      projet:hasSummary?(state.answers.goal||''):'',
+      nonce:requestId(),
+      website:'',
+      return_site:window.location.origin+window.location.pathname
     };
-    if(submit){submit.disabled=true;submit.textContent='Envoi en cours…';}
-    status.textContent='Transmission de votre demande…';
-    sentFormRef=form;
-    sentFormStatus=status;
-    sendPageCopy.textContent='Copier ma demande';
+    // La reponse du service remplace cette page. L'ecran de succes est genere
+    // par le serveur APRES MailApp.sendEmail ; impossible d'afficher un faux succes.
+    const outgoing=document.createElement('form');
+    outgoing.method='POST';
+    outgoing.action=CONFIG.appsScriptUrl;
+    outgoing.target='_self';
+    outgoing.acceptCharset='UTF-8';
+    outgoing.style.display='none';
+    for(const [key,value] of Object.entries(payload)){
+      const input=document.createElement('input');
+      input.type='hidden';input.name=key;input.value=String(value??'');
+      outgoing.appendChild(input);
+    }
+    document.body.appendChild(outgoing);
+    status.textContent='Ouverture de la confirmation Google…';
     setSendPage('sending');
-    try{
-      await transmitToSchool(payload);
-      status.textContent='Demande transmise au lycée (accusé reçu). Ceci ne vaut pas inscription.';
-      form.reset();
-      setSendPage('success');
-    }catch(err){
-      status.textContent='Envoi non confirmé. Vérifiez auprès du lycée avant de réessayer, afin d’éviter un doublon.';
+    try{outgoing.submit();}
+    catch(err){
+      outgoing.remove();
       setSendPage('error');
-    }finally{
-      if(submit){submit.disabled=false;submit.innerHTML=originalLabel;}
+      sendPageDescription.textContent='Le navigateur n’a pas pu lancer la transmission. Retournez au formulaire pour réessayer.';
     }
   }
   async function copyContactMail(form,status){
