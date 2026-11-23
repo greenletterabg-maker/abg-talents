@@ -574,16 +574,6 @@ body.send-page-open{overflow:hidden}
 .brand-school-link:focus-visible,.brand-home:focus-visible{outline:2px solid var(--pink);outline-offset:5px;border-radius:4px}
 .front-hero-lead .agora-inline{color:#fff;font-weight:700;text-decoration:underline;text-decoration-color:#eaa1b8;text-decoration-thickness:2px;text-underline-offset:4px}
 .front-hero-lead .agora-inline:hover,.front-hero-lead .agora-inline:focus-visible{text-decoration-color:#fff}
-.agora-chase[hidden]{display:none!important}
-.agora-chase{margin-top:22px;padding:15px 16px 13px;position:relative;z-index:2;border-left:3px solid #ec8da9;background:rgba(255,255,255,.075);max-width:390px}
-.agora-chase-kicker{display:block;font-size:9px;font-weight:800;letter-spacing:.13em;color:#f5b2ca;margin:0 0 9px}
-.experience-side .side-middle .agora-chase p{display:block;margin:0 0 12px;font-size:12px;line-height:1.48;color:#edf0f7}
-.agora-chase-links{display:flex;flex-wrap:wrap;gap:6px 14px}
-.agora-chase a{font-size:11px;line-height:1.4;color:#fff;font-weight:750;text-decoration:underline;text-underline-offset:3px}
-.agora-chase a:hover,.agora-chase a:focus-visible{color:#f8c1d4}
-.agora-chase small{display:block;color:#d3dbea;font-size:10px;line-height:1.35;margin-top:10px}
-@media(max-width:680px){.agora-chase{margin-top:14px;padding:11px 13px 12px;max-width:none}.experience-side .side-middle .agora-chase p{font-size:11px;line-height:1.4}.agora-chase-links{gap:5px 13px}.agora-chase a{font-size:10px}.agora-chase small{font-size:9px}}
-
 /* Menu direct des trois parcours : ne reboucle plus sur l'accueil. */
 .nav-paths-menu{position:relative;isolation:isolate;z-index:30}
 .nav-paths-menu summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;user-select:none;white-space:nowrap}
@@ -661,14 +651,6 @@ body.send-page-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.formation-diploma,.formation-next-card{transition:none}}
 @media(max-width:870px){.nav-paths-options{left:auto;right:0;transform:none}.nav-paths-options:before{left:auto;right:22px}}
 @media(max-width:600px){.nav-paths-options{position:fixed;top:68px;left:12px;right:12px;width:auto;min-width:0;transform:none;max-height:calc(100vh - 80px);overflow-y:auto}.nav-paths-options:before{display:none}}
-/* Parcours CHASE : UF3S et CS E2S–MAPS visibles sur chaque étape. */
-.sport-progression{display:grid;grid-template-columns:1fr;gap:7px;margin:10px 0 14px}
-.agora-chase .sport-progression a{padding:9px 11px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);text-decoration:none;display:flex;flex-direction:column;gap:3px;line-height:1.3}
-.agora-chase .sport-progression a:hover{background:rgba(255,255,255,.14)}
-.agora-chase .sport-progression a strong{font-size:16px;color:#fff;letter-spacing:0}
-.agora-chase .sport-progression a span{font-size:10px;color:#dce2ee;letter-spacing:0}
-.agora-chase .sport-progression a .sport-progression-phase{font-size:8px;font-weight:850;color:#f5b2ca;letter-spacing:.1em}
-.agora-chase-links{gap:5px 12px}
 @media(max-width:870px){.nav-paths-options{left:auto;right:0;transform:none}.nav-paths-options:before{left:auto;right:22px}.formation-continuum-steps{grid-template-columns:1fr}.formation-continuum-steps a{padding:13px 17px}.formation-continuum-heading{gap:10px}}
 @media(max-width:600px){.nav-paths-options{position:fixed;top:68px;left:12px;right:12px;width:auto;min-width:0;transform:none;max-height:calc(100vh - 80px);overflow-y:auto}.nav-paths-options:before{display:none}.formation-continuum{margin:18px auto 0;padding:23px 18px 30px}.formation-continuum-heading h2{font-size:25px}}
 
@@ -928,25 +910,6 @@ body.send-page-open{overflow:hidden}
 <h1 id="sideHeading">Votre dossier.<br/><em>D’information.</em></h1>
 <p id="sideText">Un parcours d’orientation simple pour comprendre l’équilibre entre la voie professionnelle, la pratique sportive ou artistique et les démarches à engager.</p>
 <div aria-hidden="true" class="side-rhythm" id="sideRhythm"><span class="active"></span><span></span><span></span><span></span><span></span></div>
-<div class="agora-chase" id="agoraChase" hidden>
-<span class="agora-chase-kicker">SPORT · FORMATION & PERSPECTIVES</span>
-<p>Le <strong>bac pro AGOrA</strong> développe des compétences de gestion et d’organisation utiles aussi dans les clubs et associations sportives.</p>
-<div class="sport-progression" aria-label="Continuité de formation dans le secteur sportif">
-  <a href="https://www.education.gouv.fr/bo/2026/Hebdo31/MENE2610275N" target="_blank" rel="noopener noreferrer" title="Consulter la présentation officielle de l'UF3S">
-    <span class="sport-progression-phase">PENDANT LE BAC · FACULTATIF</span>
-    <strong>UF3S</strong>
-    <span>Sensibilisation au secteur sportif</span>
-  </a>
-  <a href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/cs-encadrement-secteur-sportif-option-multi-activites-physiques-ou-sportives-pour-tous" target="_blank" rel="noopener noreferrer" title="Découvrir le CS E2S MAPS sur l'Onisep">
-    <span class="sport-progression-phase">APRÈS LE BAC · SOUS CONDITIONS</span>
-    <strong>CS E2S–MAPS</strong>
-    <span>Encadrement secteur sportif · multi-activités physiques ou sportives pour tous</span>
-  </a>
-</div>
-<div class="agora-chase-links"><a href="https://www.onisep.fr/ressources/univers-formation/formations/lycees/bac-pro-assistance-a-la-gestion-des-organisations-et-de-leurs-activites" target="_blank" rel="noopener noreferrer">Découvrir le bac pro AGOrA</a><a href="https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=52162&amp;originePc=0&amp;typeBac=0" target="_blank" rel="noopener noreferrer">CS E2S–MAPS au lycée Abbé Grégoire</a></div>
-<small>L'UF3S est facultative. L'entrée en CS E2S–MAPS suppose de remplir les conditions de candidature et d'admission ; elle n'est pas automatique.</small>
-</div>
-</div>
 <div class="side-bottom"><button class="switch-path" id="switchPath" type="button">← Retour aux parcours</button><span>Information uniquement · Ne vaut pas inscription</span></div>
 <svg aria-hidden="true" class="side-decoration" viewbox="0 0 260 260"><circle cx="130" cy="130" fill="none" r="70" stroke="white" stroke-width="18"></circle><circle cx="130" cy="130" fill="none" r="115" stroke="white" stroke-width="1"></circle><circle cx="215" cy="60" fill="white" r="15"></circle></svg>
 </aside>
@@ -1128,7 +1091,6 @@ body.send-page-open{overflow:hidden}
     document.getElementById('sideUniverse').textContent=p.label+' / ABBÉ GRÉGOIRE';
     document.getElementById('sideHeading').innerHTML= n===5?`Votre synthèse.<br><em>Et la suite.</em>`:`Parcours ${p.short}.<br><em>Votre projet.</em>`;
     document.getElementById('sideText').textContent=n===5?'Retrouvez les informations que vous avez renseignées, puis les démarches à vérifier.':'Quelques questions pour mieux situer votre projet avant de contacter le lycée.' ;
-    document.getElementById('agoraChase').hidden = state.path !== 'CHASE';
     document.getElementById('sideRhythm').innerHTML=Array.from({length:STEPS},(_,i)=>`<span class="${i+1<n?'done':i+1===n?'active':''}"></span>`).join('');
     let html='';
     if(n===1){
